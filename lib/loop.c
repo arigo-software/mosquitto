@@ -347,6 +347,10 @@ int mosquitto_loop_read(struct mosquitto *mosq, int max_packets)
 #endif
 		{
 			rc = packet__read(mosq);
+			if (rc == MOSQ_ERR_NOT_FOUND) {
+				printf("[MQTT Mosquitto] WARNING - received packet with unknown identifier(rc = MOSQ_ERR_NOT_FOUND) (ignoring)\n");
+				rc = MOSQ_ERR_SUCCESS;
+			}
 		}
 		if(rc || errno == EAGAIN || errno == COMPAT_EWOULDBLOCK){
 			return mosquitto__loop_rc_handle(mosq, rc);
